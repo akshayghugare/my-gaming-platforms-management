@@ -1,0 +1,348 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background: var(--bg, #0f172a);
+  color: var(--text, #ffffff);
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* ================================================================== */
+/* Per-user themes.                                                    */
+/*                                                                     */
+/* The app is built with hardcoded Tailwind "dark" utility classes.    */
+/* Instead of a root-level color filter (which produced muddy, wrong   */
+/* colors), each theme defines a real semantic palette via CSS custom  */
+/* properties, and the dominant utility classes are remapped to those  */
+/* variables. Every var() carries the native dark value as a fallback, */
+/* so the `dark` theme — and the pre-hydration state before            */
+/* ThemeContext sets data-theme — render exactly as before.            */
+/* ================================================================== */
+
+/* --- Palettes ----------------------------------------------------- */
+html[data-theme='midnight'] {
+  --bg: #020617;
+  --bg-deep: #000000;
+  --surface: #0b1120;
+  --surface-2: #131c31;
+  --surface-3: #1e2a44;
+  --navy: #0b1120;
+  --border: #1e293b;
+  --border-2: #243049;
+  --border-3: #2f3d5c;
+  --text: #f1f5f9;
+  --text-1: #e2e8f0;
+  --text-2: #cbd5e1;
+  --text-muted: #8a99b5;
+  --text-faint: #64748b;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --accent-2: #3b82f6;
+  --accent-text: #60a5fa;
+  --accent-text-2: #93c5fd;
+}
+
+html[data-theme='thin'] {
+  --bg: #1e2533;
+  --bg-deep: #161c27;
+  --surface: #283041;
+  --surface-2: #353f52;
+  --surface-3: #434e63;
+  --navy: #283041;
+  --border: #3a4456;
+  --border-2: #495467;
+  --border-3: #5a6578;
+  --text: #f5f7fa;
+  --text-1: #e6eaf0;
+  --text-2: #ccd3de;
+  --text-muted: #9aa5b5;
+  --text-faint: #76808f;
+  --accent: #4f7bd6;
+  --accent-hover: #4169c0;
+  --accent-2: #6690de;
+  --accent-text: #8fb0e8;
+  --accent-text-2: #b0c7ef;
+}
+
+html[data-theme='light'] {
+  --bg: #e2e8f0;
+  --bg-deep: #cbd5e1;
+  --surface: #ffffff;
+  --surface-2: #f1f5f9;
+  --surface-3: #e2e8f0;
+  --navy: #ffffff;
+  --border: #cbd5e1;
+  --border-2: #b6c2d2;
+  --border-3: #a3b1c4;
+  --text: #0f172a;
+  --text-1: #1e293b;
+  --text-2: #334155;
+  --text-muted: #5b6b82;
+  --text-faint: #7a899e;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --accent-2: #3b82f6;
+  --accent-text: #2563eb;
+  --accent-text-2: #1d4ed8;
+}
+
+html[data-theme='white'] {
+  --bg: #ffffff;
+  --bg-deep: #f1f5f9;
+  --surface: #ffffff;
+  --surface-2: #f4f6f9;
+  --surface-3: #e9edf3;
+  --navy: #ffffff;
+  --border: #e2e8f0;
+  --border-2: #d3dbe6;
+  --border-3: #c2ccda;
+  --text: #0b1220;
+  --text-1: #1e293b;
+  --text-2: #3b4860;
+  --text-muted: #64748b;
+  --text-faint: #8593a8;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --accent-2: #3b82f6;
+  --accent-text: #2563eb;
+  --accent-text-2: #1d4ed8;
+}
+
+html[data-theme='slate'] {
+  --bg: #3f4856;
+  --bg-deep: #333b47;
+  --surface: #4b5563;
+  --surface-2: #5b6675;
+  --surface-3: #6b7686;
+  --navy: #4b5563;
+  --border: #59626f;
+  --border-2: #6a7380;
+  --border-3: #7c8593;
+  --text: #f8fafc;
+  --text-1: #eef1f5;
+  --text-2: #d8dde4;
+  --text-muted: #aab2bf;
+  --text-faint: #8d96a3;
+  --accent: #3b82f6;
+  --accent-hover: #2563eb;
+  --accent-2: #60a5fa;
+  --accent-text: #bfd3f5;
+  --accent-text-2: #dbe7fa;
+}
+
+html[data-theme='ocean'] {
+  --bg: #082f49;
+  --bg-deep: #04212f;
+  --surface: #0c3b58;
+  --surface-2: #114a6e;
+  --surface-3: #185f86;
+  --navy: #0c3b58;
+  --border: #15506f;
+  --border-2: #1d6589;
+  --border-3: #2a7aa0;
+  --text: #ecfeff;
+  --text-1: #cffafe;
+  --text-2: #a5e9f0;
+  --text-muted: #67b8c6;
+  --text-faint: #4d97a5;
+  --accent: #0ea5e9;
+  --accent-hover: #0284c7;
+  --accent-2: #38bdf8;
+  --accent-text: #7dd3fc;
+  --accent-text-2: #bae6fd;
+}
+
+html[data-theme='forest'] {
+  --bg: #052e1b;
+  --bg-deep: #032015;
+  --surface: #073d25;
+  --surface-2: #0a4f30;
+  --surface-3: #0f653f;
+  --navy: #073d25;
+  --border: #14542d;
+  --border-2: #1a6b3a;
+  --border-3: #228148;
+  --text: #f0fdf4;
+  --text-1: #dcfce7;
+  --text-2: #bbf7d0;
+  --text-muted: #6fae85;
+  --text-faint: #548a68;
+  --accent: #16a34a;
+  --accent-hover: #15803d;
+  --accent-2: #22c55e;
+  --accent-text: #4ade80;
+  --accent-text-2: #86efac;
+}
+
+html[data-theme='contrast'] {
+  --bg: #000000;
+  --bg-deep: #000000;
+  --surface: #000000;
+  --surface-2: #0a0a0a;
+  --surface-3: #141414;
+  --navy: #000000;
+  --border: #ffffff;
+  --border-2: #ffffff;
+  --border-3: #ffffff;
+  --text: #ffffff;
+  --text-1: #ffffff;
+  --text-2: #ffffff;
+  --text-muted: #ffffff;
+  --text-faint: #f0f0f0;
+  --accent: #ffd400;
+  --accent-hover: #ffe24d;
+  --accent-2: #ffdb1a;
+  --accent-text: #ffd400;
+  --accent-text-2: #ffe24d;
+}
+
+/* --- Utility-class remap ------------------------------------------ */
+/* Scoped away from `dark` so the default theme is byte-for-byte       */
+/* unchanged. Fallbacks equal the native Tailwind dark color.          */
+html:not([data-theme='dark']) .bg-slate-900 {
+  background-color: var(--bg, #0f172a);
+}
+html:not([data-theme='dark']) .bg-slate-950 {
+  background-color: var(--bg-deep, #020617);
+}
+html:not([data-theme='dark']) .bg-slate-800 {
+  background-color: var(--surface, #1e293b);
+}
+html:not([data-theme='dark']) .bg-slate-700 {
+  background-color: var(--surface-2, #334155);
+}
+html:not([data-theme='dark']) .bg-slate-600 {
+  background-color: var(--surface-3, #475569);
+}
+html:not([data-theme='dark']) .hover\:bg-slate-800:hover {
+  background-color: var(--surface, #1e293b);
+}
+html:not([data-theme='dark']) .hover\:bg-slate-700:hover {
+  background-color: var(--surface-2, #334155);
+}
+html:not([data-theme='dark']) .hover\:bg-slate-600:hover {
+  background-color: var(--surface-3, #475569);
+}
+
+html:not([data-theme='dark']) .border-slate-800 {
+  border-color: var(--border, #1e293b);
+}
+html:not([data-theme='dark']) .border-slate-700 {
+  border-color: var(--border, #334155);
+}
+html:not([data-theme='dark']) .border-slate-600 {
+  border-color: var(--border-2, #475569);
+}
+html:not([data-theme='dark']) .border-slate-500 {
+  border-color: var(--border-3, #64748b);
+}
+html:not([data-theme='dark']) .hover\:border-slate-500:hover {
+  border-color: var(--border-3, #64748b);
+}
+html:not([data-theme='dark']) .hover\:border-slate-600:hover {
+  border-color: var(--border-2, #475569);
+}
+
+html:not([data-theme='dark']) .text-white,
+html:not([data-theme='dark']) .text-slate-100 {
+  color: var(--text, #ffffff);
+}
+html:not([data-theme='dark']) .text-slate-200 {
+  color: var(--text-1, #e2e8f0);
+}
+html:not([data-theme='dark']) .text-slate-300 {
+  color: var(--text-2, #cbd5e1);
+}
+html:not([data-theme='dark']) .text-slate-400 {
+  color: var(--text-muted, #94a3b8);
+}
+html:not([data-theme='dark']) .text-slate-500 {
+  color: var(--text-faint, #64748b);
+}
+html:not([data-theme='dark']) .text-slate-600 {
+  color: var(--text-faint, #475569);
+}
+
+html:not([data-theme='dark']) .bg-blue-600 {
+  background-color: var(--accent, #2563eb);
+}
+html:not([data-theme='dark']) .bg-blue-700 {
+  background-color: var(--accent-hover, #1d4ed8);
+}
+html:not([data-theme='dark']) .bg-blue-500 {
+  background-color: var(--accent-2, #3b82f6);
+}
+html:not([data-theme='dark']) .hover\:bg-blue-700:hover {
+  background-color: var(--accent-hover, #1d4ed8);
+}
+html:not([data-theme='dark']) .hover\:bg-blue-600:hover {
+  background-color: var(--accent, #2563eb);
+}
+html:not([data-theme='dark']) .hover\:bg-blue-500:hover {
+  background-color: var(--accent-2, #3b82f6);
+}
+html:not([data-theme='dark']) .text-blue-400,
+html:not([data-theme='dark']) .text-blue-500,
+html:not([data-theme='dark']) .text-blue-600 {
+  color: var(--accent-text, #60a5fa);
+}
+html:not([data-theme='dark']) .text-blue-300 {
+  color: var(--accent-text-2, #93c5fd);
+}
+html:not([data-theme='dark']) .border-blue-500 {
+  border-color: var(--accent-2, #3b82f6);
+}
+html:not([data-theme='dark']) .border-blue-600 {
+  border-color: var(--accent, #2563eb);
+}
+
+/* Arbitrary deep-navy values sprinkled across the app */
+html:not([data-theme='dark']) .bg-\[\#0d1b3e\],
+html:not([data-theme='dark']) .bg-\[\#0c1631\],
+html:not([data-theme='dark']) .bg-\[\#101b3d\],
+html:not([data-theme='dark']) .bg-\[\#111d3e\],
+html:not([data-theme='dark']) .bg-\[\#162040\],
+html:not([data-theme='dark']) .bg-\[\#1a2744\],
+html:not([data-theme='dark']) .bg-\[\#1d2e55\] {
+  background-color: var(--navy, #0d1b3e);
+}
+
+/* Thin Scrollbar */
+.thin-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #334155 transparent;
+}
+
+.thin-scrollbar::-webkit-scrollbar {
+  width: 2px;
+  height: 2px;
+}
+
+.thin-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.thin-scrollbar::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 14px;
+}
+
+.thin-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+/* hide scrollbar */
+
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}

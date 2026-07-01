@@ -1,0 +1,7 @@
+id,name,provider,category,game_thumbnail,tournament_widget_thumbnail,bonus_buy_allow,device_support
+pragmatic-sweet-bonanza,Sweet Bonanza,Pragmatic Play,Slots,https://cdn.example.com/games/sweet-bonanza.jpg,https://cdn.example.com/widgets/sweet-bonanza.jpg,true,"{""mobile"":true,""desktop"":true}"
+netent-starburst,Starburst,NetEnt,Slots,https://cdn.example.com/games/starburst.jpg,https://cdn.example.com/widgets/starburst.jpg,false,"{""mobile"":true,""desktop"":true}"
+evolution-lightning-roulette,Lightning Roulette,Evolution Gaming,Live Casino,https://cdn.example.com/games/lightning-roulette.jpg,,false,"{""mobile"":true,""desktop"":true}"
+playngo-book-of-dead,Book of Dead,Play'n GO,Slots,https://cdn.example.com/games/book-of-dead.jpg,https://cdn.example.com/widgets/book-of-dead.jpg,true,"{""mobile"":true,""desktop"":true}"
+evolution-crazy-time,Crazy Time,Evolution Gaming,Game Shows,https://cdn.example.com/games/crazy-time.jpg,https://cdn.example.com/widgets/crazy-time.jpg,false,"{""mobile"":true,""desktop"":true}"
+nolimit-mental,Mental,Nolimit City,Slots,https://cdn.example.com/games/mental.jpg,,true,"{""mobile"":false,""desktop"":true}"

@@ -1,0 +1,151 @@
+import { useState, type FC } from 'react';
+import { X } from 'lucide-react';
+
+export interface OAuthClientFormData {
+  name: string;
+  description: string;
+  client_id: string;
+  client_secret: string;
+}
+
+interface Props {
+  loading: boolean;
+  closeModal: () => void;
+  onSave: (data: OAuthClientFormData) => Promise<void> | void;
+}
+
+const inputClass = (hasError: boolean) =>
+  `w-full px-3 py-2.5 rounded-lg text-sm bg-slate-800 border text-slate-100 placeholder-slate-500 outline-none transition-all focus:ring-1 focus:ring-blue-500/60 ${
+    hasError
+      ? 'border-red-500/60 focus:border-red-500'
+      : 'border-slate-700/60 hover:border-slate-600 focus:border-blue-500/60'
+  }`;
+
+const OAuthClientModal: FC<Props> = ({ loading, closeModal, onSave }) => {
+  const [form, setForm] = useState<OAuthClientFormData>({
+    name: '',
+    description: '',
+    client_id: '',
+    client_secret: '',
+  });
+  const [errors, setErrors] = useState<Partial<Record<keyof OAuthClientFormData, string>>>({});
+
+  const validate = (): boolean => {
+    const next: Partial<Record<keyof OAuthClientFormData, string>> = {};
+    if (!form.name.trim()) next.name = 'Required';
+    if (!form.client_id.trim()) next.client_id = 'Required';
+    if (!form.client_secret.trim()) next.client_secret = 'Required';
+    setErrors(next);
+    return Object.keys(next).length === 0;
+  };
+
+  const submit = () => {
+    if (!validate()) return;
+    onSave({
+      name: form.name.trim(),
+      description: form.description.trim(),
+      client_id: form.client_id.trim(),
+      client_secret: form.client_secret.trim(),
+    });
+  };
+
+  return (
+    <div
+      className="fixed inset-0 bg-black/30 backdrop-blur-sm flex justify-center items-center z-50"
+      onClick={closeModal}
+    >
+      <div
+        className="bg-slate-900 border border-slate-700/50 rounded-xl shadow-2xl w-full max-w-lg mx-4 flex flex-col"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-between px-6 py-4 border-b border-slate-700/50">
+          <h2 className="text-base font-semibold text-slate-100">Add OAuth Client</h2>
+          <button
+            type="button"
+            onClick={closeModal}
+            className="p-1.5 rounded-md text-slate-400 hover:text-slate-200 hover:bg-slate-700/60 transition-all"
+          >
+            <X size={16} />
+          </button>
+        </div>
+
+        <div className="px-6 py-5 space-y-4">
+          <div className="space-y-1.5">
+            <label className="block text-xs font-medium text-slate-300 uppercase tracking-wider">
+              Name *
+            </label>
+            <input
+              type="text"
+              value={form.name}
+              onChange={(e) => setForm((p) => ({ ...p, name: e.target.value }))}
+              placeholder="e.g. CRM Webhooks"
+              className={inputClass(Boolean(errors.name))}
+            />
+            {errors.name && <p className="text-xs text-red-400">{errors.name}</p>}
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="block text-xs font-medium text-slate-300 uppercase tracking-wider">
+              Description
+            </label>
+            <input
+              type="text"
+              value={form.description}
+              onChange={(e) => setForm((p) => ({ ...p, description: e.target.value }))}
+              placeholder="What this client is used for"
+              className={inputClass(false)}
+            />
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="block text-xs font-medium text-slate-300 uppercase tracking-wider">
+              Client ID *
+            </label>
+            <input
+              type="text"
+              value={form.client_id}
+              onChange={(e) => setForm((p) => ({ ...p, client_id: e.target.value }))}
+              placeholder="oauth-client-id"
+              className={inputClass(Boolean(errors.client_id))}
+            />
+            {errors.client_id && <p className="text-xs text-red-400">{errors.client_id}</p>}
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="block text-xs font-medium text-slate-300 uppercase tracking-wider">
+              Client Secret *
+            </label>
+            <input
+              type="password"
+              value={form.client_secret}
+              onChange={(e) => setForm((p) => ({ ...p, client_secret: e.target.value }))}
+              placeholder="••••••••••••"
+              className={inputClass(Boolean(errors.client_secret))}
+            />
+            {errors.client_secret && <p className="text-xs text-red-400">{errors.client_secret}</p>}
+          </div>
+        </div>
+
+        <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-slate-700/50">
+          <button
+            type="button"
+            onClick={closeModal}
+            className="px-4 py-2 rounded-lg text-sm font-medium text-red-400 hover:text-red-300 hover:bg-red-500/10"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            onClick={submit}
+            disabled={loading}
+            className="px-5 py-2 rounded-lg text-sm font-semibold bg-blue-600 hover:bg-blue-500 disabled:bg-blue-600/50 text-white"
+          >
+            {loading ? 'Creating…' : 'Create'}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default OAuthClientModal;

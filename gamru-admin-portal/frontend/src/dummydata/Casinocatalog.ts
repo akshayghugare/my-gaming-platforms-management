@@ -1,0 +1,122 @@
+import {
+  CasinoCatalogGame,
+  CasinoCatalogCategory,
+  CasinoCatalogProvider,
+} from '@/types/casinoCatalog.types';
+
+export const DUMMY_GAMES: CasinoCatalogGame[] = [
+  {
+    id: 'sweet-bonanza',
+    name: 'Sweet Bonanza',
+    provider: 'PragmaticPlay',
+    category: 'slots',
+    image: 'https://placehold.co/40x40/1e293b/60a5fa?text=SB',
+    bonusBuyAllow: true,
+    deviceSupport: { mobile: true, desktop: true },
+  },
+  {
+    id: 'gates-of-olympus',
+    name: 'Gates of Olympus',
+    provider: 'PragmaticPlay',
+    category: 'slots',
+    image: 'https://placehold.co/40x40/1e293b/60a5fa?text=GO',
+    bonusBuyAllow: true,
+    deviceSupport: { mobile: true, desktop: true },
+  },
+  {
+    id: 'dragon-tiger',
+    name: 'Dragon Tiger',
+    provider: 'RedTiger',
+    category: 'live_casino',
+    bonusBuyAllow: false,
+    deviceSupport: { mobile: false, desktop: true },
+  },
+  {
+    id: 'lucky-neko',
+    name: 'Lucky Neko',
+    provider: 'KAGaming',
+    category: 'slots',
+    bonusBuyAllow: false,
+    deviceSupport: { mobile: true, desktop: false },
+  },
+  {
+    id: 'blackjack-vip',
+    name: 'Blackjack VIP',
+    provider: 'RedTiger',
+    category: 'table_games',
+    bonusBuyAllow: false,
+    deviceSupport: { mobile: true, desktop: true },
+  },
+  {
+    id: 'roulette-pro',
+    name: 'Roulette Pro',
+    provider: 'PragmaticPlay',
+    category: 'table_games',
+    bonusBuyAllow: false,
+    deviceSupport: { mobile: false, desktop: true },
+  },
+  {
+    id: 'aztec-gems',
+    name: 'Aztec Gems',
+    provider: 'PragmaticPlay',
+    category: 'slots',
+    bonusBuyAllow: true,
+    deviceSupport: { mobile: true, desktop: true },
+  },
+  {
+    id: 'wolf-gold',
+    name: 'Wolf Gold',
+    provider: 'PragmaticPlay',
+    category: 'slots',
+    bonusBuyAllow: false,
+    deviceSupport: { mobile: true, desktop: true },
+  },
+  {
+    id: 'lightning-roulette',
+    name: 'Lightning Roulette',
+    provider: 'RedTiger',
+    category: 'live_casino',
+    bonusBuyAllow: false,
+    deviceSupport: { mobile: true, desktop: true },
+  },
+  {
+    id: 'fortune-tiger',
+    name: 'Fortune Tiger',
+    provider: 'KAGaming',
+    category: 'slots',
+    bonusBuyAllow: true,
+    deviceSupport: { mobile: false, desktop: true },
+  },
+  {
+    id: 'mega-ball',
+    name: 'Mega Ball',
+    provider: 'RedTiger',
+    category: 'live_casino',
+    bonusBuyAllow: false,
+    deviceSupport: { mobile: true, desktop: true },
+  },
+  {
+    id: 'starlight-princess',
+    name: 'Starlight Princess',
+    provider: 'PragmaticPlay',
+    category: 'slots',
+    bonusBuyAllow: true,
+    deviceSupport: { mobile: true, desktop: true },
+  },
+];
+
+export const DUMMY_CATEGORIES: CasinoCatalogCategory[] = [
+  { id: 'slots', name: 'Slots' },
+  { id: 'table_games', name: 'Table Games' },
+  { id: 'live_casino', name: 'Live Casino' },
+  { id: 'crash_games', name: 'Crash Games' },
+  { id: 'fishing', name: 'Fishing Games' },
+];
+
+export const DUMMY_PROVIDERS: CasinoCatalogProvider[] = [
+  { id: 'pragmatic-play', name: 'PragmaticPlay' },
+  { id: 'red-tiger', name: 'RedTiger' },
+  { id: 'ka-gaming', name: 'KAGaming' },
+  { id: 'evolution', name: 'Evolution Gaming' },
+  { id: 'netent', name: 'NetEnt' },
+];

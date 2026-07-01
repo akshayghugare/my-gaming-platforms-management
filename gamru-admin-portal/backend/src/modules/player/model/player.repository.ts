@@ -1,0 +1,151 @@
+import { Op, QueryTypes, WhereOptions } from "sequelize";
+import sequelize from "../../../config/db";
+import { BaseRepository } from "../../../core/models/base.repository";
+import Player from "./player.model";
+import PlayerCampaignHistory from "./player-campaign-history.model";
+import PlayerReward from "./player-reward.model";
+import PlayerLog from "./player-log.model";
+
+export type PlayerSearchField =
+  | "all"
+  | "name"
+  | "email"
+  | "username"
+  | "player_id";
+
+export interface PlayerFilter {
+  search?: string;
+  status?: string;
+  country?: string;
+  field?: PlayerSearchField;
+}
+
+const PLAYER_SEARCH_FIELDS: Record<Exclude<PlayerSearchField, "all">, string> = {
+  name: "name",
+  email: "email",
+  username: "username",
+  player_id: "player_id",
+};
+
+class PlayerRepository extends BaseRepository<Player> {
+  constructor() {
+    super(Player);
+  }
+
+  private buildWhere(filter: PlayerFilter): WhereOptions {
+    const where: Record<string, unknown> = {};
+
+    if (filter.status) where.status = filter.status;
+    if (filter.country) where.country = filter.country;
+
+    if (filter.search) {
+      const like = { [Op.iLike]: `%${filter.search}%` };
+      if (filter.field && filter.field !== "all" && PLAYER_SEARCH_FIELDS[filter.field]) {
+        where[PLAYER_SEARCH_FIELDS[filter.field]] = like;
+      } else {
+        where[Op.or as unknown as string] = [
+          { player_id: like },
+          { username: like },
+          { name: like },
+          { email: like },
+        ];
+      }
+    }
+
+    return where as WhereOptions;
+  }
+
+  async paginatePlayers(page: number, limit: number, filter: PlayerFilter) {
+    return this.paginate(page, limit, this.buildWhere(filter));
+  }
+
+  /** Distinct tag values across all players — feeds the segment Tag dropdown. */
+  async listDistinctTags(): Promise<string[]> {
+    const rows = await sequelize.query<{ tag: string }>(
+      `SELECT DISTINCT elem AS tag
+         FROM players, jsonb_array_elements_text(players.tags) AS elem
+        WHERE players.tags IS NOT NULL
+        ORDER BY tag`,
+      { type: QueryTypes.SELECT }
+    );
+    return rows.map((r) => r.tag).filter(Boolean);
+  }
+}
+
+export const playerRepository = new PlayerRepository();
+
+class PlayerCampaignHistoryRepository extends BaseRepository<PlayerCampaignHistory> {
+  constructor() {
+    super(PlayerCampaignHistory);
+  }
+
+  async paginateForPlayer(
+    playerId: string,
+    page: number,
+    limit: number,
+    search?: string,
+    unreadOnly?: boolean
+  ) {
+    const where: Record<string, unknown> = { player_id: playerId };
+    if (search) where.title = { [Op.iLike]: `%${search}%` };
+    if (unreadOnly) where.read_at = { [Op.is]: null };
+    return this.paginate(page, limit, where as WhereOptions, [
+      ["event_at", "DESC"],
+    ]);
+  }
+
+  /** Number of messages a player has not opened yet — the inbox badge count. */
+  async countUnreadForPlayer(playerId: string): Promise<number> {
+    return this.count({
+      player_id: playerId,
+      read_at: { [Op.is]: null },
+    } as WhereOptions);
+  }
+
+  /** A single delivery, scoped to its owner so one player can't read another's. */
+  async findForPlayer(
+    id: string,
+    playerId: string
+  ): Promise<PlayerCampaignHistory | null> {
+    return this.findOne({ id, player_id: playerId } as WhereOptions);
+  }
+}
+
+export const playerCampaignHistoryRepository =
+  new PlayerCampaignHistoryRepository();
+
+class PlayerRewardRepository extends BaseRepository<PlayerReward> {
+  constructor() {
+    super(PlayerReward);
+  }
+
+  async paginateForPlayer(playerId: string, page: number, limit: number) {
+    return this.paginate(
+      page,
+      limit,
+      { player_id: playerId } as WhereOptions,
+      [["created_at", "DESC"]]
+    );
+  }
+}
+
+export const playerRewardRepository = new PlayerRewardRepository();
+
+class PlayerLogRepository extends BaseRepository<PlayerLog> {
+  constructor() {
+    super(PlayerLog);
+  }
+
+  async paginateForPlayer(playerId: string, page: number, limit: number) {
+    return this.paginate(
+      page,
+      limit,
+      { player_id: playerId } as WhereOptions,
+      [["created_at", "DESC"]]
+    );
+  }
+}
+
+export const playerLogRepository = new PlayerLogRepository();
+
+export default playerRepository;

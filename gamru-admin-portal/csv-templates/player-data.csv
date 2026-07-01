@@ -1,0 +1,9 @@
+name,data_type,description
+favorite_sport,STRING,Player's most-played sport (free text)
+is_vip,BOOLEAN,Marks accounts with active VIP status
+lifetime_deposit_total,NUMBER,Sum of all confirmed deposits in account currency
+last_login_at,DATE,Timestamp of the most recent successful login
+preferred_language,STRING,ISO 639-1 language code (en, es, fr...)
+marketing_opt_in,BOOLEAN,True when the player has consented to marketing emails
+total_bets_placed,NUMBER,Cumulative count of placed bets across all products
+kyc_completed_at,DATE,Date KYC verification was approved

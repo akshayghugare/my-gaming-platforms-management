@@ -1,0 +1,9 @@
+Reward Id;Product Name;Product Description;Categorization;Brand;Image URL;Cost to client inc delivery;Currency
+PRZ-0001;Sony WH-1000XM5 Headphones;Wireless noise-cancelling over-ear headphones with 30h battery;Electronics;Sony;https://cdn.example.com/img/wh1000xm5.jpg;349.99;USD
+PRZ-0002;Apple AirPods Pro (2nd Gen);Active noise cancellation earbuds with MagSafe charging case;Electronics;Apple;https://cdn.example.com/img/airpods-pro-2.jpg;229.00;USD
+PRZ-0003;Amazon Gift Card 50 USD;Digital Amazon.com gift card delivered by email within 24h;Gift Cards;Amazon;https://cdn.example.com/img/amazon-gc-50.jpg;50.00;USD
+PRZ-0004;Nike Air Max 270;Mens running shoes, size selectable at checkout;Apparel;Nike;https://cdn.example.com/img/airmax270.jpg;150.00;USD
+PRZ-0005;PlayStation 5 Slim Console;Disc edition, includes one DualSense controller;Gaming;Sony;https://cdn.example.com/img/ps5-slim.jpg;499.99;USD
+PRZ-0006;Starbucks Gift Card 25 EUR;Digital Starbucks gift card, EU stores only;Gift Cards;Starbucks;https://cdn.example.com/img/sbux-gc-25.jpg;25.00;EUR
+PRZ-0007;Dyson V15 Detect Vacuum;Cordless stick vacuum with laser dust detection;Home;Dyson;https://cdn.example.com/img/dyson-v15.jpg;749.00;GBP
+PRZ-0008;Fitbit Charge 6;Fitness tracker with built-in GPS and heart rate monitoring;Wearables;Fitbit;https://cdn.example.com/img/fitbit-charge-6.jpg;159.95;USD

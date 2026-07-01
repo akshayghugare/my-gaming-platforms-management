@@ -1,0 +1,40 @@
+
+> gamify-engage-frontend@0.0.0 dev
+> vite
+
+
+  [32m[1mVITE[22m v5.4.21[39m  [2mready in [0m[1m2327[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m5174[22m/[39m
+[2m  [32m➜[39m  [1mNetwork[22m[2m: use [22m[1m--host[22m[2m to expose[22m
+[2m3:20:26 PM[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/types/index.ts[22m
+[2m3:20:32 PM[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/types/index.ts[22m
+[2m3:20:43 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/Notifications.tsx, /src/pages/Leaderboard.tsx, /src/pages/games/Aviator.tsx, /src/pages/Missions.tsx, /src/pages/TournamentDetail.tsx, /src/pages/games/Slider.tsx, /src/pages/RankProgress.tsx, /src/pages/games/MemoryMatch.tsx, /src/pages/MissionBundles.tsx, /src/pages/Profile.tsx, /src/pages/games/Snake.tsx, /src/pages/Deposit.tsx, /src/pages/LuckySpinner.tsx, /src/pages/Tournaments.tsx, /src/pages/Rewards.tsx, /src/pages/games/ClickStorm.tsx, /src/pages/Dashboard.tsx, /src/pages/games/DragonRun.tsx, /src/pages/games/TeenPatti.tsx, /src/pages/RewardShop.tsx, /src/components/TournamentHistory.tsx[22m
+[2m3:20:55 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/Notifications.tsx, /src/pages/Leaderboard.tsx, /src/pages/games/Aviator.tsx, /src/pages/Missions.tsx, /src/pages/TournamentDetail.tsx, /src/pages/games/Slider.tsx, /src/pages/RankProgress.tsx, /src/pages/games/MemoryMatch.tsx, /src/pages/MissionBundles.tsx, /src/pages/Profile.tsx, /src/pages/games/Snake.tsx, /src/pages/Deposit.tsx, /src/pages/LuckySpinner.tsx, /src/pages/Tournaments.tsx, /src/pages/Rewards.tsx, /src/pages/games/ClickStorm.tsx, /src/pages/Dashboard.tsx, /src/pages/games/DragonRun.tsx, /src/pages/games/TeenPatti.tsx, /src/pages/RewardShop.tsx, /src/components/TournamentHistory.tsx[22m
+[2m3:22:18 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/games/Snake.tsx, /src/index.css[22m
+[2m3:22:19 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/games/Snake.tsx, /src/index.css[22m
+[2m3:22:59 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/games/Aviator.tsx, /src/index.css[22m
+[2m3:23:00 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/games/Aviator.tsx, /src/index.css[22m
+[2m3:23:01 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/games/ClickStorm.tsx, /src/index.css[22m
+[2m3:23:03 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/games/ClickStorm.tsx, /src/index.css[22m
+[2m3:23:05 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/games/DragonRun.tsx, /src/index.css[22m
+[2m3:23:06 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/games/DragonRun.tsx, /src/index.css[22m
+[2m3:23:08 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/games/MemoryMatch.tsx, /src/index.css[22m
+[2m3:23:09 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/games/MemoryMatch.tsx, /src/index.css[22m
+[2m3:23:10 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/games/TeenPatti.tsx, /src/index.css[22m
+[2m3:23:12 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/games/TeenPatti.tsx, /src/index.css[22m
+[2m3:23:13 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/games/Slider.tsx, /src/index.css[22m
+[2m3:23:15 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/games/Slider.tsx, /src/index.css[22m
+[2m3:23:17 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/LuckySpinner.tsx, /src/index.css[22m
+[2m3:23:18 PM[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/LuckySpinner.tsx, /src/index.css[22m
+[2m4:01:08 PM[22m [36m[1m[vite][22m[39m [32m.env changed, restarting server...[39m
+[2m4:01:08 PM[22m [36m[1m[vite][22m[39m [32m.env changed, restarting server...[39m
+[2m4:01:08 PM[22m [36m[1m[vite][22m[39m server restarted.
+[2m6:08:50 PM[22m [36m[1m[vite][22m[39m [32m.env changed, restarting server...[39m
+[2m6:08:50 PM[22m [36m[1m[vite][22m[39m [32m.env changed, restarting server...[39m
+[2m6:08:50 PM[22m [36m[1m[vite][22m[39m server restarted.
+[2m11:34:54 AM[22m [36m[1m[vite][22m[39m [32m.env changed, restarting server...[39m
+[2m11:34:54 AM[22m [36m[1m[vite][22m[39m server restarted.
+[2m1:49:47 PM[22m [36m[1m[vite][22m[39m [32m.env changed, restarting server...[39m
+[2m1:49:47 PM[22m [36m[1m[vite][22m[39m [32m.env changed, restarting server...[39m
+[2m1:49:47 PM[22m [36m[1m[vite][22m[39m server restarted.

@@ -1,0 +1,117 @@
+# ─────────────────────────────────────────────────────────────────────
+# Render Blueprint — Gamru Engage backend
+# Docs: https://render.com/docs/blueprint-spec
+#
+# This file lives at the repo root for `gamru-backend`. Render reads it
+# when you create a "Blueprint" from this repository.
+#
+# IMPORTANT — first-time setup:
+#   1. Push this repo to GitHub/GitLab.
+#   2. In Render dashboard: New + → Blueprint → pick this repo.
+#   3. Fill in every env var below that is marked `sync: false`
+#      (database creds, JWT secrets, mail SMTP creds).
+#   4. Add a managed Postgres database in Render (or use Aiven/Neon/etc.)
+#      and copy its host/port/user/password/name into the DB_* vars.
+#
+# WHY `npm run build` + `node src/server.ts`:
+#   • `npm run build`  →  package.json: `tsc && cpSync(templates)`
+#                         compiles src/*.ts  →  dist/*.js (excluding
+#                         src/server.ts itself — see tsconfig "exclude")
+#                         and copies src/templates/*.html → dist/templates/
+#   • Start Command    →  `node src/server.ts`
+#                         src/server.ts is a CommonJS shim (no TS syntax,
+#                         no ESM imports) that just requires the compiled
+#                         dist/main.js. Node 24+ strips types from .ts
+#                         files natively, so this works without ts-node.
+#                         The real server entry lives in src/main.ts.
+#
+# NOTES:
+#   • Render auto-injects PORT for web services — do NOT hardcode it.
+#     The app already reads `process.env.PORT || 5000`.
+#   • `npm ci` on Render installs devDependencies too, so `tsc` and
+#     `sequelize-cli` are available during build.
+#   • DB migrations run inside buildCommand so they execute on every
+#     deploy regardless of plan tier (preDeployCommand needs a paid
+#     plan). Sequelize tracks applied migrations in SequelizeMeta, so
+#     re-running is safe / idempotent.
+#   • Render's free-tier disk is ephemeral — files under `uploads/`
+#     will NOT survive a redeploy. For persistent uploads, mount a
+#     disk (paid plan) or move media to S3 / R2 / Cloudinary.
+# ─────────────────────────────────────────────────────────────────────
+
+services:
+  - type: web
+    name: gamru-backend
+    runtime: node
+    plan: free
+    region: singapore
+    branch: main
+    autoDeploy: true
+
+    # 1) install deps  2) compile TS + copy email templates  3) run migrations
+    buildCommand: >-
+      npm ci &&
+      npm run build &&
+      npx sequelize-cli db:migrate
+
+    # src/server.ts is a CJS shim that requires dist/main.js (see comment above).
+    startCommand: node src/server.ts
+
+    healthCheckPath: /api/health
+
+    envVars:
+      # ── Runtime ────────────────────────────────────────────────────
+      - key: NODE_VERSION
+        value: 20.18.0
+      - key: NODE_ENV
+        value: production
+      # PORT: intentionally omitted — Render assigns it automatically.
+
+      # ── Database (set these in the Render dashboard) ───────────────
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        sync: false
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_NAME
+        sync: false
+      # SSL is auto-enabled for non-localhost hosts in src/config/db.ts,
+      # but we force it on here so cloud Postgres (Aiven/Neon/Render PG)
+      # never connects in plaintext.
+      - key: DB_SSL
+        value: "true"
+
+      # ── Bonus sync → games platform (SDLCGames) ───────────────────
+      # GAMRU fetches bonus DEFINITIONS from the games backend when a rank
+      # pins a bonus id (GET <url>/bonuses/catalog/:id) and snapshots them
+      # into the `bonuses` table. MUST be the games backend's PUBLIC url
+      # INCLUDING the /api suffix, e.g.
+      #   https://my-game-platform-backend-4.onrender.com/api
+      # If unset it falls back to http://localhost:5001/api — which on Render
+      # points at nothing, so the bonuses table stays empty. Set it in the
+      # Render dashboard.
+      - key: GAMES_PLATFORM_BACKEND_URL
+        sync: false
+
+      # ── Auth / JWT ────────────────────────────────────────────────
+      - key: JWT_ACCESS_SECRET
+        sync: false
+      - key: JWT_REFRESH_SECRET
+        sync: false
+      - key: JWT_ACCESS_EXPIRES_IN
+        value: 1d
+
+      # ── Mail / SMTP (Nodemailer) ──────────────────────────────────
+      - key: MAIL_HOST
+        sync: false
+      - key: MAIL_PORT
+        sync: false
+      - key: MAIL_USER
+        sync: false
+      - key: MAIL_PASS
+        sync: false
+      - key: MAIL_FROM
+        sync: false

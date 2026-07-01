@@ -1,0 +1,716 @@
+{
+  "info": {
+    "_postman_id": "18e4ffe8-5d23-4b44-ae9b-39ef79d0a4a7",
+    "name": "gamru collection",
+    "description": "GAMRU integration API. Organised by feature. Server-to-server (integrator) endpoints use the `x-client-auth-key` header; lifecycle event endpoints additionally use `x-service-key`. Admin/back-office endpoints use a JWT `Authorization: Bearer {{TOKEN}}`.\n\nThe dedicated, feature-named endpoints (Missions, Tournaments, Rewards, Shop, Ranks, Progress, Participation, Claims, Widgets, Events) are the recommended integration surface and replace the generic `POST /api/integration/events`, which is kept only for backward compatibility.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "24293520"
+  },
+  "variable": [
+    { "key": "BASE_URL", "value": "http://localhost:5000", "type": "string" },
+    { "key": "x-client-auth-key", "value": "", "type": "string" },
+    { "key": "x-service-key", "value": "", "type": "string" },
+    { "key": "TOKEN", "value": "", "type": "string" },
+    { "key": "EMAIL", "value": "jane@gmail.com", "type": "string" },
+    { "key": "EXTERNAL_ID", "value": "P-1001", "type": "string" },
+    { "key": "PLAYER_ID", "value": "d2c7ee22-bf50-43e3-a694-d2a1f0358b7a", "type": "string" },
+    { "key": "MISSION_ID", "value": "591d0314-ac39-44d7-acb3-781b85cebc39", "type": "string" },
+    { "key": "BUNDLE_ID", "value": "578d0fcc-8f54-41da-81c2-bf2d0a243760", "type": "string" },
+    { "key": "TOURNAMENT_ID", "value": "ba747078-ff7e-4f1b-9835-faa16c5dc69b", "type": "string" },
+    { "key": "REWARD_ID", "value": "490919ce-d791-418a-ac62-a8fae87c1833", "type": "string" },
+    { "key": "SHOP_ITEM_ID", "value": "56a26c1c-adde-42b0-a006-a6ed68b704cb", "type": "string" },
+    { "key": "CAMPAIGN_ID", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "description": "Liveness + credential checks. `x-client-auth-key` is your per-client key from gamru; `x-service-key` is the shared service key for lifecycle events.",
+      "item": [
+        {
+          "name": "Health check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{BASE_URL}}/api/health", "host": ["{{BASE_URL}}"], "path": ["api", "health"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Check my client",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" } ],
+            "url": { "raw": "{{BASE_URL}}/api/clients/me", "host": ["{{BASE_URL}}"], "path": ["api", "clients", "me"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Admin login (sets TOKEN)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res && res.data && res.data.accessToken) {",
+                  "  pm.collectionVariables.set('TOKEN', res.data.accessToken);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "Content-Type", "value": "application/json", "type": "text" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"admin@gamru.com\",\n  \"password\": \"changeme\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{BASE_URL}}/api/auth/login", "host": ["{{BASE_URL}}"], "path": ["api", "auth", "login"] }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Players",
+      "description": "Player onboarding and profile reads. The aggregated profile (POST /players/by-email) returns the player plus the full gamification catalog (ranks, missions, reward-shop, tournaments, rewards, logs).",
+      "item": [
+        {
+          "name": "Register a user on gamru",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"first_name\": \"Jane\",\n  \"last_name\": \"Doe\",\n  \"email\": \"{{EMAIL}}\",\n  \"mobile\": \"15551234567\",\n  \"password\": \"test@123\",\n  \"username\": \"jane\",\n  \"role\": \"USER\",\n  \"status\": \"ACTIVE\",\n  \"source\": \"POSTMAN\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{BASE_URL}}/api/users/add", "host": ["{{BASE_URL}}"], "path": ["api", "users", "add"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Get player profile by email",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"{{EMAIL}}\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{BASE_URL}}/api/players/by-email", "host": ["{{BASE_URL}}"], "path": ["api", "players", "by-email"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Get player profile by id",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" } ],
+            "url": { "raw": "{{BASE_URL}}/api/players/{{PLAYER_ID}}", "host": ["{{BASE_URL}}"], "path": ["api", "players", "{{PLAYER_ID}}"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Play game — add XP by email",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"{{EMAIL}}\",\n  \"amount\": 25,\n  \"game\": {\n    \"id\": \"g-100\",\n    \"name\": \"Starburst\",\n    \"category\": \"slots\",\n    \"provider\": \"NetEnt\",\n    \"turnover\": 50\n  }\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{BASE_URL}}/api/players/by-email/add-xp", "host": ["{{BASE_URL}}"], "path": ["api", "players", "by-email", "add-xp"] }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Events (lifecycle)",
+      "description": "Dedicated, feature-named replacements for the generic event endpoint. Same two-layer auth (x-service-key + x-client-auth-key) and the same internal pipeline (idempotency on event_id, lazy player linking, segment recount, audit logs). Pass your own stable `event_id` to make retries idempotent.",
+      "item": [
+        {
+          "name": "Register external user",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" },
+              { "key": "x-service-key", "value": "{{x-service-key}}", "type": "text" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"external_id\": \"{{EXTERNAL_ID}}\",\n  \"email\": \"{{EMAIL}}\",\n  \"event_id\": \"USER_REGISTERED:{{EXTERNAL_ID}}:0001\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{BASE_URL}}/api/events/register", "host": ["{{BASE_URL}}"], "path": ["api", "events", "register"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Record deposit",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" },
+              { "key": "x-service-key", "value": "{{x-service-key}}", "type": "text" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"external_id\": \"{{EXTERNAL_ID}}\",\n  \"email\": \"{{EMAIL}}\",\n  \"amount\": 100,\n  \"event_id\": \"DEPOSIT_MADE:{{EXTERNAL_ID}}:0001\",\n  \"meta\": { \"deposit_count\": 1 }\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{BASE_URL}}/api/events/deposit", "host": ["{{BASE_URL}}"], "path": ["api", "events", "deposit"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Award XP (event)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" },
+              { "key": "x-service-key", "value": "{{x-service-key}}", "type": "text" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"external_id\": \"{{EXTERNAL_ID}}\",\n  \"email\": \"{{EMAIL}}\",\n  \"amount\": 25,\n  \"event_id\": \"XP_AWARDED:{{EXTERNAL_ID}}:0001\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{BASE_URL}}/api/events/xp", "host": ["{{BASE_URL}}"], "path": ["api", "events", "xp"] }
+          },
+          "response": []
+        },
+        {
+          "name": "[DEPRECATED] Generic event",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" },
+              { "key": "x-service-key", "value": "{{x-service-key}}", "type": "text" }
+            ],
+            "description": "Deprecated. Kept for backward compatibility — prefer the dedicated Events / feature endpoints.",
+            "body": { "mode": "raw", "raw": "{\n  \"event_id\": \"XP_AWARDED:{{EXTERNAL_ID}}:legacy-1\",\n  \"event_type\": \"XP_AWARDED\",\n  \"external_id\": \"{{EXTERNAL_ID}}\",\n  \"origin\": \"POSTMAN\",\n  \"email\": \"{{EMAIL}}\",\n  \"amount\": 25\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{BASE_URL}}/api/integration/events", "host": ["{{BASE_URL}}"], "path": ["api", "integration", "events"] }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Missions",
+      "description": "Dedicated mission endpoints. Catalog reads + participate/progress/claim. `:id` is a gamru mission id; player refs accept an email or a gamru player id.",
+      "item": [
+        {
+          "name": "List missions",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" } ],
+            "url": { "raw": "{{BASE_URL}}/api/missions", "host": ["{{BASE_URL}}"], "path": ["api", "missions"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Get mission",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" } ],
+            "url": { "raw": "{{BASE_URL}}/api/missions/{{MISSION_ID}}", "host": ["{{BASE_URL}}"], "path": ["api", "missions", "{{MISSION_ID}}"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Get player missions",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" } ],
+            "url": { "raw": "{{BASE_URL}}/api/missions/player/{{EMAIL}}", "host": ["{{BASE_URL}}"], "path": ["api", "missions", "player", "{{EMAIL}}"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Participate (join)",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"{{EMAIL}}\",\n  \"name\": \"Jane\",\n  \"external_id\": \"{{EXTERNAL_ID}}\",\n  \"status\": \"IN_PROGRESS\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{BASE_URL}}/api/missions/{{MISSION_ID}}/participate", "host": ["{{BASE_URL}}"], "path": ["api", "missions", "{{MISSION_ID}}", "participate"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Get mission progress",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" } ],
+            "url": { "raw": "{{BASE_URL}}/api/missions/{{MISSION_ID}}/progress?email={{EMAIL}}", "host": ["{{BASE_URL}}"], "path": ["api", "missions", "{{MISSION_ID}}", "progress"], "query": [ { "key": "email", "value": "{{EMAIL}}" } ] }
+          },
+          "response": []
+        },
+        {
+          "name": "Update mission progress",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"{{EMAIL}}\",\n  \"status\": \"COMPLETED\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{BASE_URL}}/api/missions/{{MISSION_ID}}/progress", "host": ["{{BASE_URL}}"], "path": ["api", "missions", "{{MISSION_ID}}", "progress"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Claim mission reward",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"{{EMAIL}}\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{BASE_URL}}/api/missions/{{MISSION_ID}}/claim", "host": ["{{BASE_URL}}"], "path": ["api", "missions", "{{MISSION_ID}}", "claim"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Mission bundle participation (legacy gamification path)",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"{{EMAIL}}\",\n  \"name\": \"Jane\",\n  \"external_id\": \"{{EXTERNAL_ID}}\",\n  \"status\": \"IN_PROGRESS\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{BASE_URL}}/api/gamification/mission-bundles/{{BUNDLE_ID}}/participants", "host": ["{{BASE_URL}}"], "path": ["api", "gamification", "mission-bundles", "{{BUNDLE_ID}}", "participants"] }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Campaigns",
+      "description": "Campaigns are CRM/marketing constructs managed in the back office (JWT). Player-level campaign exposure is read via Progress → campaigns. There is no player participate/claim action for campaigns (membership is driven by segments).",
+      "item": [
+        {
+          "name": "List campaigns (admin)",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "Authorization", "value": "Bearer {{TOKEN}}", "type": "text" } ],
+            "url": { "raw": "{{BASE_URL}}/api/campaigns/paginate?page=1&limit=25", "host": ["{{BASE_URL}}"], "path": ["api", "campaigns", "paginate"], "query": [ { "key": "page", "value": "1" }, { "key": "limit", "value": "25" } ] }
+          },
+          "response": []
+        },
+        {
+          "name": "Get campaign (admin)",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "Authorization", "value": "Bearer {{TOKEN}}", "type": "text" } ],
+            "url": { "raw": "{{BASE_URL}}/api/campaigns/{{CAMPAIGN_ID}}", "host": ["{{BASE_URL}}"], "path": ["api", "campaigns", "{{CAMPAIGN_ID}}"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Player campaign history",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" } ],
+            "url": { "raw": "{{BASE_URL}}/api/progress/campaigns/{{EMAIL}}", "host": ["{{BASE_URL}}"], "path": ["api", "progress", "campaigns", "{{EMAIL}}"] }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Tournaments",
+      "description": "Dedicated tournament endpoints: catalog, join, leaderboard, progress and score submission.",
+      "item": [
+        {
+          "name": "List tournaments",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" } ],
+            "url": { "raw": "{{BASE_URL}}/api/tournaments", "host": ["{{BASE_URL}}"], "path": ["api", "tournaments"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Get tournament",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" } ],
+            "url": { "raw": "{{BASE_URL}}/api/tournaments/{{TOURNAMENT_ID}}", "host": ["{{BASE_URL}}"], "path": ["api", "tournaments", "{{TOURNAMENT_ID}}"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Join tournament",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"{{EMAIL}}\",\n  \"name\": \"Jane\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{BASE_URL}}/api/tournaments/{{TOURNAMENT_ID}}/join", "host": ["{{BASE_URL}}"], "path": ["api", "tournaments", "{{TOURNAMENT_ID}}", "join"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Get leaderboard",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" } ],
+            "url": { "raw": "{{BASE_URL}}/api/tournaments/{{TOURNAMENT_ID}}/leaderboard", "host": ["{{BASE_URL}}"], "path": ["api", "tournaments", "{{TOURNAMENT_ID}}", "leaderboard"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Get tournament progress",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" } ],
+            "url": { "raw": "{{BASE_URL}}/api/tournaments/{{TOURNAMENT_ID}}/progress?email={{EMAIL}}", "host": ["{{BASE_URL}}"], "path": ["api", "tournaments", "{{TOURNAMENT_ID}}", "progress"], "query": [ { "key": "email", "value": "{{EMAIL}}" } ] }
+          },
+          "response": []
+        },
+        {
+          "name": "Submit score",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"{{EMAIL}}\",\n  \"name\": \"Jane\",\n  \"points\": 150\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{BASE_URL}}/api/tournaments/{{TOURNAMENT_ID}}/score", "host": ["{{BASE_URL}}"], "path": ["api", "tournaments", "{{TOURNAMENT_ID}}", "score"] }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Rewards",
+      "description": "A player's reward ledger and claiming. Claiming applies the reward's effect (xp / tokens / bonus cash).",
+      "item": [
+        {
+          "name": "List rewards (by email)",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" } ],
+            "url": { "raw": "{{BASE_URL}}/api/rewards?email={{EMAIL}}", "host": ["{{BASE_URL}}"], "path": ["api", "rewards"], "query": [ { "key": "email", "value": "{{EMAIL}}" } ] }
+          },
+          "response": []
+        },
+        {
+          "name": "Get player rewards",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" } ],
+            "url": { "raw": "{{BASE_URL}}/api/rewards/player/{{PLAYER_ID}}", "host": ["{{BASE_URL}}"], "path": ["api", "rewards", "player", "{{PLAYER_ID}}"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Get reward status",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" } ],
+            "url": { "raw": "{{BASE_URL}}/api/rewards/{{REWARD_ID}}/status", "host": ["{{BASE_URL}}"], "path": ["api", "rewards", "{{REWARD_ID}}", "status"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Claim reward",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" } ],
+            "url": { "raw": "{{BASE_URL}}/api/rewards/{{REWARD_ID}}/claim", "host": ["{{BASE_URL}}"], "path": ["api", "rewards", "{{REWARD_ID}}", "claim"] }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Shop",
+      "description": "Reward-shop catalog and token purchases. Price and stock come from gamru — the caller only names the product and quantity.",
+      "item": [
+        {
+          "name": "List shop items",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" } ],
+            "url": { "raw": "{{BASE_URL}}/api/shop/items", "host": ["{{BASE_URL}}"], "path": ["api", "shop", "items"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Get shop item",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" } ],
+            "url": { "raw": "{{BASE_URL}}/api/shop/items/{{SHOP_ITEM_ID}}", "host": ["{{BASE_URL}}"], "path": ["api", "shop", "items", "{{SHOP_ITEM_ID}}"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Purchase item",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"{{EMAIL}}\",\n  \"shop_item_id\": \"{{SHOP_ITEM_ID}}\",\n  \"quantity\": 1\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{BASE_URL}}/api/shop/purchase", "host": ["{{BASE_URL}}"], "path": ["api", "shop", "purchase"] }
+          },
+          "response": []
+        },
+        {
+          "name": "List purchases",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" } ],
+            "url": { "raw": "{{BASE_URL}}/api/shop/purchases?email={{EMAIL}}", "host": ["{{BASE_URL}}"], "path": ["api", "shop", "purchases"], "query": [ { "key": "email", "value": "{{EMAIL}}" } ] }
+          },
+          "response": []
+        },
+        {
+          "name": "Get purchase",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" } ],
+            "url": { "raw": "{{BASE_URL}}/api/shop/purchases/{{REWARD_ID}}", "host": ["{{BASE_URL}}"], "path": ["api", "shop", "purchases", "{{REWARD_ID}}"] }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Ranks",
+      "description": "Rank ladder, a player's rank, an XP leaderboard, and an on-demand rank recompute.",
+      "item": [
+        {
+          "name": "List ranks (ladder)",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" } ],
+            "url": { "raw": "{{BASE_URL}}/api/ranks", "host": ["{{BASE_URL}}"], "path": ["api", "ranks"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Rank leaderboard",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" } ],
+            "url": { "raw": "{{BASE_URL}}/api/ranks/leaderboard?limit=25", "host": ["{{BASE_URL}}"], "path": ["api", "ranks", "leaderboard"], "query": [ { "key": "limit", "value": "25" } ] }
+          },
+          "response": []
+        },
+        {
+          "name": "Get player rank",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" } ],
+            "url": { "raw": "{{BASE_URL}}/api/ranks/player/{{EMAIL}}", "host": ["{{BASE_URL}}"], "path": ["api", "ranks", "player", "{{EMAIL}}"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Recompute rank",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"{{EMAIL}}\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{BASE_URL}}/api/ranks/update", "host": ["{{BASE_URL}}"], "path": ["api", "ranks", "update"] }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Progress",
+      "description": "Read-only progress projections for a player (`:playerId` accepts email or gamru player id).",
+      "item": [
+        {
+          "name": "Overall progress",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" } ],
+            "url": { "raw": "{{BASE_URL}}/api/progress/player/{{EMAIL}}", "host": ["{{BASE_URL}}"], "path": ["api", "progress", "player", "{{EMAIL}}"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Missions progress",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" } ],
+            "url": { "raw": "{{BASE_URL}}/api/progress/missions/{{EMAIL}}", "host": ["{{BASE_URL}}"], "path": ["api", "progress", "missions", "{{EMAIL}}"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Campaigns progress",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" } ],
+            "url": { "raw": "{{BASE_URL}}/api/progress/campaigns/{{EMAIL}}", "host": ["{{BASE_URL}}"], "path": ["api", "progress", "campaigns", "{{EMAIL}}"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Tournaments progress",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" } ],
+            "url": { "raw": "{{BASE_URL}}/api/progress/tournaments/{{EMAIL}}", "host": ["{{BASE_URL}}"], "path": ["api", "progress", "tournaments", "{{EMAIL}}"] }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Participation",
+      "description": "Verb-style participation aliases. Campaigns have no participation action (segment-driven).",
+      "item": [
+        {
+          "name": "Participate in mission",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"mission_id\": \"{{MISSION_ID}}\",\n  \"email\": \"{{EMAIL}}\",\n  \"external_id\": \"{{EXTERNAL_ID}}\",\n  \"status\": \"IN_PROGRESS\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{BASE_URL}}/api/participation/mission", "host": ["{{BASE_URL}}"], "path": ["api", "participation", "mission"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Participate in mission bundle",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"bundle_id\": \"{{BUNDLE_ID}}\",\n  \"email\": \"{{EMAIL}}\",\n  \"external_id\": \"{{EXTERNAL_ID}}\",\n  \"status\": \"IN_PROGRESS\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{BASE_URL}}/api/participation/mission-bundle", "host": ["{{BASE_URL}}"], "path": ["api", "participation", "mission-bundle"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Participate in tournament",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"tournament_id\": \"{{TOURNAMENT_ID}}\",\n  \"email\": \"{{EMAIL}}\",\n  \"name\": \"Jane\",\n  \"points\": 0\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{BASE_URL}}/api/participation/tournament", "host": ["{{BASE_URL}}"], "path": ["api", "participation", "tournament"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Player participation",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" } ],
+            "url": { "raw": "{{BASE_URL}}/api/participation/player/{{EMAIL}}", "host": ["{{BASE_URL}}"], "path": ["api", "participation", "player", "{{EMAIL}}"] }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Claims",
+      "description": "Verb-style claim aliases. Only reward + mission claims are modelled.",
+      "item": [
+        {
+          "name": "Claim reward",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"reward_id\": \"{{REWARD_ID}}\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{BASE_URL}}/api/claims/reward", "host": ["{{BASE_URL}}"], "path": ["api", "claims", "reward"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Claim mission",
+          "request": {
+            "method": "POST",
+            "header": [ { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" } ],
+            "body": { "mode": "raw", "raw": "{\n  \"mission_id\": \"{{MISSION_ID}}\",\n  \"email\": \"{{EMAIL}}\"\n}", "options": { "raw": { "language": "json" } } },
+            "url": { "raw": "{{BASE_URL}}/api/claims/mission", "host": ["{{BASE_URL}}"], "path": ["api", "claims", "mission"] }
+          },
+          "response": []
+        },
+        {
+          "name": "Player claims",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" } ],
+            "url": { "raw": "{{BASE_URL}}/api/claims/player/{{EMAIL}}", "host": ["{{BASE_URL}}"], "path": ["api", "claims", "player", "{{EMAIL}}"] }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Widgets",
+      "description": "JSON data endpoints feeding player-facing widgets (projections of the aggregated profile). Pass ?email= or ?player_id=. Visual embeds are still served by /api/widget.",
+      "item": [
+        {
+          "name": "Profile widget",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" } ],
+            "url": { "raw": "{{BASE_URL}}/api/widgets/profile?email={{EMAIL}}", "host": ["{{BASE_URL}}"], "path": ["api", "widgets", "profile"], "query": [ { "key": "email", "value": "{{EMAIL}}" } ] }
+          },
+          "response": []
+        },
+        {
+          "name": "Missions widget",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" } ],
+            "url": { "raw": "{{BASE_URL}}/api/widgets/missions?email={{EMAIL}}", "host": ["{{BASE_URL}}"], "path": ["api", "widgets", "missions"], "query": [ { "key": "email", "value": "{{EMAIL}}" } ] }
+          },
+          "response": []
+        },
+        {
+          "name": "Tournaments widget",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" } ],
+            "url": { "raw": "{{BASE_URL}}/api/widgets/tournaments?email={{EMAIL}}", "host": ["{{BASE_URL}}"], "path": ["api", "widgets", "tournaments"], "query": [ { "key": "email", "value": "{{EMAIL}}" } ] }
+          },
+          "response": []
+        },
+        {
+          "name": "Rewards widget",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" } ],
+            "url": { "raw": "{{BASE_URL}}/api/widgets/rewards?email={{EMAIL}}", "host": ["{{BASE_URL}}"], "path": ["api", "widgets", "rewards"], "query": [ { "key": "email", "value": "{{EMAIL}}" } ] }
+          },
+          "response": []
+        },
+        {
+          "name": "Shop widget",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" } ],
+            "url": { "raw": "{{BASE_URL}}/api/widgets/shop?email={{EMAIL}}", "host": ["{{BASE_URL}}"], "path": ["api", "widgets", "shop"], "query": [ { "key": "email", "value": "{{EMAIL}}" } ] }
+          },
+          "response": []
+        },
+        {
+          "name": "Ranks widget",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" } ],
+            "url": { "raw": "{{BASE_URL}}/api/widgets/ranks?email={{EMAIL}}", "host": ["{{BASE_URL}}"], "path": ["api", "widgets", "ranks"], "query": [ { "key": "email", "value": "{{EMAIL}}" } ] }
+          },
+          "response": []
+        },
+        {
+          "name": "Progress widget",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" } ],
+            "url": { "raw": "{{BASE_URL}}/api/widgets/progress?email={{EMAIL}}", "host": ["{{BASE_URL}}"], "path": ["api", "widgets", "progress"], "query": [ { "key": "email", "value": "{{EMAIL}}" } ] }
+          },
+          "response": []
+        },
+        {
+          "name": "Campaigns widget",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "x-client-auth-key", "value": "{{x-client-auth-key}}", "type": "text" } ],
+            "url": { "raw": "{{BASE_URL}}/api/widgets/campaigns?email={{EMAIL}}", "host": ["{{BASE_URL}}"], "path": ["api", "widgets", "campaigns"], "query": [ { "key": "email", "value": "{{EMAIL}}" } ] }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Administration",
+      "description": "Back-office (JWT) examples. The full admin surface (users, roles, gamification CRUD, segments, templates, catalogs) is served under /api/* with Authorization: Bearer {{TOKEN}}.",
+      "item": [
+        {
+          "name": "Gamification — list missions (admin)",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "Authorization", "value": "Bearer {{TOKEN}}", "type": "text" } ],
+            "url": { "raw": "{{BASE_URL}}/api/gamification/missions/paginate?page=1&limit=25", "host": ["{{BASE_URL}}"], "path": ["api", "gamification", "missions", "paginate"], "query": [ { "key": "page", "value": "1" }, { "key": "limit", "value": "25" } ] }
+          },
+          "response": []
+        },
+        {
+          "name": "Tournament leaderboard (admin, legacy)",
+          "request": {
+            "method": "GET",
+            "header": [ { "key": "Authorization", "value": "Bearer {{TOKEN}}", "type": "text" } ],
+            "url": { "raw": "{{BASE_URL}}/api/tournament-leaderboard/{{TOURNAMENT_ID}}", "host": ["{{BASE_URL}}"], "path": ["api", "tournament-leaderboard", "{{TOURNAMENT_ID}}"] }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}

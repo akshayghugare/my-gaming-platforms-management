@@ -1,0 +1,74 @@
+# ─────────────────────────────────────────────────────────────────────
+# Render Blueprint — Gamru Engage frontend (Vite + React static site)
+# Docs: https://render.com/docs/blueprint-spec
+#
+# This file lives at the repo root for `gamru-frontend`. Render reads it
+# when you create a "Blueprint" (or a "Static Site") from this repository.
+#
+# FIRST-TIME SETUP:
+#   1. Push this repo to GitHub/GitLab.
+#   2. Render dashboard → New + → Blueprint → pick this repo.
+#   3. Set the env vars marked `sync: false` (see below) — the backend
+#      URL and the shared password secret.
+#   4. Deploy. Render builds with Vite and serves the static `dist/`.
+#
+# WHY a static site (not a Node web service):
+#   • `npm run build` (tsc -b && vite build) emits a fully static bundle
+#     into `dist/`. There is no server to run — Render's CDN serves the
+#     files directly, which is cheaper and faster than a Node process.
+#
+# IMPORTANT — Vite env vars are BAKED IN AT BUILD TIME:
+#   • Anything the app reads via `import.meta.env.VITE_*` is inlined into
+#     the JS bundle when `vite build` runs. So these vars MUST be set on
+#     Render BEFORE/at build (they are — Render injects envVars into the
+#     build step). Changing one later requires a redeploy to take effect.
+#   • Never put real secrets in a VITE_ var you don't want public: the
+#     built bundle ships to the browser. VITE_PASSWORD_SECRET is only a
+#     shared obfuscation key, matched with the backend — not a true secret.
+#
+# SPA ROUTING:
+#   • The `routes` rewrite sends every path to /index.html so React Router
+#     handles deep links (e.g. refreshing /players/:id won't 404). This
+#     replaces the old Netlify `_redirects` / netlify.toml fallback.
+# ─────────────────────────────────────────────────────────────────────
+
+services:
+  - type: web
+    runtime: static
+    name: gamru-frontend
+    branch: main
+    autoDeploy: true
+
+    # 1) install exact deps from the lockfile  2) tsc + vite build → dist/
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+
+    # SPA fallback: serve index.html for any client-side route.
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+
+    # Long-cache the fingerprinted build assets.
+    # IMPORTANT: do NOT set X-Frame-Options / frame-ancestors here. The whole
+    # point of the /widget/<type> route is to be embedded as an iframe on
+    # OTHER origins (the games platform). A SAMEORIGIN/deny header would make
+    # the browser refuse to render those widget iframes cross-site.
+    headers:
+      - path: /assets/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+
+    envVars:
+      # Pin the Node version used for the build (Vite 5 needs Node 18+).
+      - key: NODE_VERSION
+        value: 20.18.0
+
+      # Backend API base URL, e.g. https://gamru-backend.onrender.com/api
+      # Set this in the Render dashboard to your deployed backend.
+      - key: VITE_API_BASE_URL
+        sync: false
+
+      # Shared password-obfuscation secret — must match the backend's value.
+      - key: VITE_PASSWORD_SECRET
+        sync: false

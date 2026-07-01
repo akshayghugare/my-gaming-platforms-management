@@ -1,0 +1,14 @@
+import { chromium } from "playwright";
+import * as A from "./actions.mjs";
+const b = await chromium.launch();
+const c = await b.newContext({ viewport:{width:1600,height:900}});
+const p = await c.newPage(); p.setDefaultTimeout(15000);
+const log = (k,v)=>console.log(`### ${k}:`, JSON.stringify(v));
+await A.gamruLogin(p);
+log("createMission", await A.createMission(p));
+console.log("  mission row:", await p.locator(`tr:has-text("${A.MISSION_NAME}")`).count());
+log("editMission", await A.editMission(p));
+log("createRewardProduct", await A.createRewardProduct(p));
+console.log("  product row:", await p.locator(`tr:has-text("${A.PRODUCT_NAME}")`).count());
+log("createUser", await A.createUser(p));
+await b.close(); console.log("DONE");

@@ -1,0 +1,39 @@
+[ 1/60] intro -> http://localhost:5173/login
+[ 2/60] gamru-login -> (act-driven)
+[ 3/60] gamru-dashboard -> http://localhost:5173/dashboard
+[ 4/60] gamru-players -> http://localhost:5173/players
+[ 5/60] gamru-crm-campaigns -> http://localhost:5173/crm/campaigns
+[ 6/60] gamru-crm-analytics -> http://localhost:5173/crm/analytics
+[ 7/60] gamru-crm-segments -> http://localhost:5173/crm/segments
+[ 8/60] gamru-crm-templates -> http://localhost:5173/crm/templates
+[ 9/60] gamru-crm-triggers -> http://localhost:5173/crm/custom-triggers
+[10/60] gamru-crm-freqcap -> http://localhost:5173/crm/frequency-cap
+[11/60] gamru-crm-unsub -> http://localhost:5173/crm/unsubscribe-reports
+[12/60] gamru-crm-playerdata -> http://localhost:5173/crm/player-data
+[13/60] gamru-gam-missions -> http://localhost:5173/gamification/missions
+[14/60] ACTION gamru-mission-create -> http://localhost:5173/gamification/missions/create
+[15/60] ACTION gamru-mission-edit -> (act-driven)
+[16/60] gamru-gam-bundles -> http://localhost:5173/gamification/mission-bundles
+[17/60] gamru-gam-ranks -> http://localhost:5173/gamification/ranks
+[18/60] gamru-gam-token-casino -> http://localhost:5173/gamification/token-rules-casino
+[19/60] gamru-gam-token-sports -> http://localhost:5173/gamification/token-rules-sports
+[20/60] gamru-gam-xp-casino -> http://localhost:5173/gamification/xp-point-rules-casino
+[21/60] gamru-gam-xp-sports -> http://localhost:5173/gamification/xp-point-rules-sports
+[22/60] gamru-gam-categories -> http://localhost:5173/gamification/player-categories
+[23/60] gamru-gam-rewardshop -> http://localhost:5173/gamification/reward-shop
+[24/60] ACTION gamru-reward-create -> http://localhost:5173/gamification/reward-shop/create
+[25/60] gamru-gam-prizeshark -> http://localhost:5173/gamification/prizeshark-catalog
+[26/60] gamru-gam-purchasefeed -> http://localhost:5173/gamification/purchase-feed
+[27/60] gamru-gam-tournaments -> http://localhost:5173/gamification/tournaments
+[28/60] gamru-set-users -> http://localhost:5173/settings/users
+[29/60] ACTION gamru-user-create -> http://localhost:5173/settings/users
+[30/60] gamru-set-logs -> http://localhost:5173/settings/user-logs
+[31/60] gamru-set-roles -> http://localhost:5173/settings/roles
+[32/60] gamru-set-system -> http://localhost:5173/settings/system-settings
+[33/60] gamru-set-tags-gam -> http://localhost:5173/settings/tags-gamification
+[34/60] gamru-set-tags-crm -> http://localhost:5173/settings/tags-crm
+[35/60] gamru-set-media -> http://localhost:5173/settings/media-database
+[36/60] gamru-set-casino -> http://localhost:5173/settings/casino-catalog
+[37/60] gamru-set-sports -> http://localhost:5173/settings/sports-catalog
+[38/60] gamru-set-http -> http://localhost:5173/settings/http-debugger-console
+[39/60] gamru-set-widget -> http://localhost:5173/settings/widget-setup

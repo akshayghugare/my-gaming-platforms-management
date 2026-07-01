@@ -1,0 +1,17 @@
+# Conventional Commits format check
+# Allowed types: feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert
+commit_regex='^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\(.+\))?: .{1,}$'
+
+if ! grep -qE "$commit_regex" "$1"; then
+  echo "❌ Invalid commit message format!"
+  echo ""
+  echo "✅ Use Conventional Commits format:"
+  echo "   <type>(<optional scope>): <description>"
+  echo ""
+  echo "   Examples:"
+  echo "     feat: add login page"
+  echo "     fix(auth): resolve token refresh issue"
+  echo "     docs: update README"
+  echo ""
+  exit 1
+fi

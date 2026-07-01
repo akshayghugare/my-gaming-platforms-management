@@ -1,0 +1,293 @@
+[
+  { "id": "intro", "app": "diagram", "diagram": "arch", "act": "none",
+    "title": "GAMRU & SDLC Games — Complete Product Walkthrough",
+    "narration": "Welcome to the complete walkthrough of the Gamru and SDLC Games ecosystem. Two platforms work together. Gamru Engage is the back office and the engagement engine — where operators author missions, ranks, tournaments, campaigns, rewards, and bonuses. SDLC Games, branded Gamify Engage, is the player facing app where customers actually play, earn, and redeem. Gamru is the single source of truth. The games platform is a thin consumer that forwards events and renders what Gamru returns, while experience points, level, rank, and coins live in the external Hamara Engage service. Everything connects over a clean integration A P I, and any feature can be embedded anywhere as a widget. Let's see how it all fits together, end to end." },
+
+  { "id": "auth", "app": "diagram", "diagram": "auth", "act": "none",
+    "title": "Authentication & Access Control",
+    "narration": "Every session starts with authentication. The login form sends the email and password — Gamru first obfuscates the password with a shared secret. The backend verifies the bcrypt hash and issues a signed J W T access token plus a refresh token. The client stores the token, the axios layer attaches it to every request, and route guards plus role based access control decide which pages each user can open. A four oh one response refreshes once, then clears the session." },
+
+  { "id": "gamru-login", "app": "gamru", "path": null, "act": "gamruLogin",
+    "title": "GAMRU Admin — Sign In",
+    "narration": "Here is the operator signing in to the Gamru admin console, landing on the dashboard. This back office is where every mission, rank, reward, campaign, and bonus is defined." },
+
+  { "id": "gamru-dashboard", "app": "gamru", "path": "/dashboard", "act": "none",
+    "title": "Admin Dashboard",
+    "narration": "The dashboard gives a real time overview of player engagement, experience trends, and the key gamification metrics, all in one place — the operator's mission control." },
+
+  { "id": "gamru-players", "app": "gamru", "path": "/players", "act": "none",
+    "title": "Players",
+    "narration": "The Players section lists every registered player. Operators search, filter, and open any player to inspect their profile. Because Gamru now owns progression, each player record also exposes their live mission and tournament progress." },
+
+  { "id": "gamru-player-detail", "app": "gamru", "path": "/players", "act": "openFirstPlayer",
+    "title": "Player Detail · Gamification Tab",
+    "narration": "Opening a player reveals their full profile, and the Gamification tab shows the per player mission and tournament progress that Gamru calculates and stores — the same progress the player sees in the games app, viewed here from the operator's side." },
+
+  { "id": "gamru-crm-campaigns", "app": "gamru", "path": "/crm/campaigns", "act": "none",
+    "title": "CRM · Campaigns",
+    "narration": "Now the C R M suite. Campaigns are real delivery journeys. Each carries a channel and a template, can be sent on demand, or fire automatically on an event like registration, first deposit, or login." },
+
+  { "id": "gamru-crm-analytics", "app": "gamru", "path": "/crm/analytics", "act": "none",
+    "title": "CRM · Analytics",
+    "narration": "Analytics now reflects genuine deliveries. Sent, delivered, opened, and clicked are produced by real messages and real opens flowing back from players — no fabricated numbers — and that data feeds the next campaign's targeting." },
+
+  { "id": "gamru-crm-segments", "app": "gamru", "path": "/crm/segments", "act": "none",
+    "title": "CRM · Segments",
+    "narration": "Segments are rule trees that resolve to real players by behaviour and attributes, so campaigns and rewards can be precisely targeted." },
+
+  { "id": "gamru-crm-templates", "app": "gamru", "path": "/crm/templates", "act": "none",
+    "title": "CRM · Templates",
+    "narration": "Templates store reusable messages on a chosen channel, with personalization tokens like name, level, rank, and tokens, keeping every communication on brand." },
+
+  { "id": "gamru-crm-triggers", "app": "gamru", "path": "/crm/custom-triggers", "act": "none",
+    "title": "CRM · Custom Triggers",
+    "narration": "Custom Triggers fire automated actions when a player does something specific, such as completing a deposit or reaching a new level." },
+
+  { "id": "gamru-crm-freqcap", "app": "gamru", "path": "/crm/frequency-cap", "act": "none",
+    "title": "CRM · Frequency Cap",
+    "narration": "Frequency Caps protect players from message fatigue by limiting how often each channel can contact them. The delivery engine enforces these caps on every send." },
+
+  { "id": "gamru-crm-unsub", "app": "gamru", "path": "/crm/unsubscribe-reports", "act": "none",
+    "title": "CRM · Unsubscribe Reports",
+    "narration": "Unsubscribe Reports track opt outs per channel for compliance, and the delivery engine skips any player who has unsubscribed." },
+
+  { "id": "gamru-crm-playerdata", "app": "gamru", "path": "/crm/player-data", "act": "none",
+    "title": "CRM · Player Data",
+    "narration": "Player Data centralizes the attributes and events that power segmentation and personalization across the whole C R M." },
+
+  { "id": "campaign-flow", "app": "diagram", "diagram": "campaign", "act": "none",
+    "title": "Campaign Flow — Author to Inbox",
+    "narration": "Here is the full campaign lifecycle. The operator builds a template, a segment, and a campaign. On send — or on a matching event from the games platform — the delivery engine checks consent, unsubscribes, and frequency caps, renders the template, and writes a message into the player's on site inbox. Opening it records an open, the call to action records a click, and both flow back into analytics." },
+
+  { "id": "gamru-gam-missions", "app": "gamru", "path": "/gamification/missions", "act": "none",
+    "title": "Gamification · Missions",
+    "narration": "Now the heart of the platform. Missions are the challenges players complete to earn rewards. Each mission listens to an event — wager, win, deposit, login and more — with a measure, a target, and a reward. This is the master list. Let's create a brand new mission, live." },
+
+  { "id": "gamru-mission-create", "app": "gamru", "path": "/gamification/missions/create", "act": "createMission", "action": true,
+    "title": "Creating a Mission (live)",
+    "narration": "Watch closely. I fill in the mission's internal name, choose the Casino category, and write a description. On the objective step I pick the wager event with a target value. Then I set a fifty experience point reward, mark the mission active, and save. There it is — created and instantly in the list, ready for players." },
+
+  { "id": "gamru-mission-edit", "app": "gamru", "path": null, "act": "editMission", "action": true,
+    "title": "Updating a Mission (live)",
+    "narration": "Updating is just as easy. I open the mission we just created, rewrite the description, and raise the reward to seventy five experience points, then save. Every change is reflected immediately, because this row is the single source of truth the games platform reads from." },
+
+  { "id": "gamru-mission-delete", "app": "gamru", "path": null, "act": "deleteMission", "action": true,
+    "title": "Deleting a Mission (live)",
+    "narration": "And the lifecycle completes with delete. From the mission's row menu I choose Delete and confirm in the prompt. The backend validates and removes the record, and it disappears from the list and the player catalog immediately. Create, read, update, delete — this same C R U D pattern powers every module in the console." },
+
+  { "id": "mission-flow", "app": "diagram", "diagram": "mission", "act": "none",
+    "title": "Mission Flow — GAMRU Owns Progress",
+    "narration": "This is the most important architectural change. Gamru now owns all per player mission progress, not just the definitions. The player joins from the games app, which pulls the catalog by email. As they play, the round posts an activity event to Gamru. Gamru's progress engine matches the event, advances the player's participant row idempotently, and flips the mission to completed. On claim, Gamru grants the reward into its player rewards ledger — one loop, visible from both the player and the operator." },
+
+  { "id": "gamru-gam-bundles", "app": "gamru", "path": "/gamification/mission-bundles", "act": "none",
+    "title": "Gamification · Mission Bundles",
+    "narration": "Mission Bundles group related missions into a themed pack with a periodicity — daily, weekly, monthly, or lifetime — giving players a bigger goal and a bonus for completing the set." },
+
+  { "id": "gamru-gam-ranks", "app": "gamru", "path": "/gamification/ranks", "act": "none",
+    "title": "Gamification · Ranks & Levels",
+    "narration": "Ranks define the progression ladder from Bronze upward, each with its levels and experience ranges. This is also where operators pin Bonus I Ds onto a level or a whole rank, so reaching it automatically grants that bonus on the games platform." },
+
+  { "id": "gamru-gam-bonuses", "app": "gamru", "path": "/gamification/bonuses", "act": "none",
+    "title": "Gamification · Bonuses",
+    "narration": "The Bonuses view is a newer addition. It mirrors the bonus channel that lives on the games platform — showing the synced bonus catalog and a ledger of every bonus players have claimed — so operators get full visibility even though the wallet credit happens on the games side." },
+
+  { "id": "bonus-flow", "app": "diagram", "diagram": "bonus", "act": "none",
+    "title": "Bonus Flow — The Pointer Pattern",
+    "narration": "Bonuses use an elegant pointer pattern. The operator defines a bonus on the games platform, choosing Real Money or Bonus Money, and copies its I D. That I D is pinned to a Gamru level or rank. Gamru never calls the games A P I to grant it — the I D simply rides the player by email payload. When the player reaches that level, the games platform reconciles the grant once, the player claims it, and the amount lands in the matching wallet bucket, keeping balance equal to real money plus bonus money." },
+
+  { "id": "gamru-gam-token-casino", "app": "gamru", "path": "/gamification/token-rules-casino", "act": "none",
+    "title": "Gamification · Token Rules (Casino)",
+    "narration": "Token Rules for Casino control how casino activity converts into the reward tokens players spend in the shop." },
+
+  { "id": "gamru-gam-token-sports", "app": "gamru", "path": "/gamification/token-rules-sports", "act": "none",
+    "title": "Gamification · Token Rules (Sports)",
+    "narration": "Token Rules for Sports map sports betting activity to token rewards, keeping the casino and sports economies separate but consistent." },
+
+  { "id": "gamru-gam-xp-casino", "app": "gamru", "path": "/gamification/xp-point-rules-casino", "act": "none",
+    "title": "Gamification · XP Point Rules (Casino)",
+    "narration": "Experience point rules for Casino decide how much experience a player earns for each casino action, driving level and rank progression." },
+
+  { "id": "gamru-gam-xp-sports", "app": "gamru", "path": "/gamification/xp-point-rules-sports", "act": "none",
+    "title": "Gamification · XP Point Rules (Sports)",
+    "narration": "And experience point rules for Sports do the same for sports activity, so the whole economy stays balanced." },
+
+  { "id": "gamru-gam-categories", "app": "gamru", "path": "/gamification/player-categories", "act": "none",
+    "title": "Gamification · Player Categories",
+    "narration": "Player Categories classify players into tiers, so rules and rewards can differ by audience." },
+
+  { "id": "gamru-gam-rewardshop", "app": "gamru", "path": "/gamification/reward-shop", "act": "none",
+    "title": "Gamification · Reward Shop",
+    "narration": "The Reward Shop is the catalog of products players buy with the tokens they earn. Let's add a new product, live." },
+
+  { "id": "gamru-reward-create", "app": "gamru", "path": "/gamification/reward-shop/create", "act": "createRewardProduct", "action": true,
+    "title": "Creating a Reward Product (live)",
+    "narration": "I enter the product name, choose its category, and add a description. I set it as an internal product with a token price, give it stock, mark it visible to all players, set it active, and save. The new product is created and will appear in the player's reward shop and in any reward shop widget." },
+
+  { "id": "gamru-reward-delete", "app": "gamru", "path": null, "act": "deleteRewardProduct", "action": true,
+    "title": "Deleting a Reward Product (live)",
+    "narration": "Deletion works the same way for reward products. I open the row menu for the product we just created, choose Delete, and confirm. It is removed from the catalog and from every player's reward shop instantly." },
+
+  { "id": "gamru-gam-prizeshark", "app": "gamru", "path": "/gamification/prizeshark-catalog", "act": "none",
+    "title": "Gamification · Prizeshark Catalog",
+    "narration": "The Prizeshark Catalog connects external prize inventory into the reward ecosystem." },
+
+  { "id": "gamru-gam-purchasefeed", "app": "gamru", "path": "/gamification/purchase-feed", "act": "none",
+    "title": "Gamification · Purchase Feed",
+    "narration": "The Purchase Feed is a live record of every reward redemption players make across the platform — useful for fulfilment and auditing." },
+
+  { "id": "gamru-gam-tournaments", "app": "gamru", "path": "/gamification/tournaments", "act": "none",
+    "title": "Gamification · Tournaments",
+    "narration": "Tournaments let operators run time boxed competitions. Gamru owns the scoring, ranks the leaderboard, and settles the prize pool. The leaderboard for any tournament can be opened right here for monitoring." },
+
+  { "id": "tournament-flow", "app": "diagram", "diagram": "tournament", "act": "none",
+    "title": "Tournament Flow",
+    "narration": "The tournament flow mirrors missions. The operator creates the tournament; players join and each scored round posts to Gamru, updating the tournament scores table and the live rank. When the tournament ends, Gamru settles the pool fifty, thirty, twenty to the top three, and each winner claims their prize into the rewards ledger." },
+
+  { "id": "gamru-set-users", "app": "gamru", "path": "/settings/users", "act": "none",
+    "title": "Settings · User Management",
+    "narration": "In Settings, User Management controls the operator accounts that access this console. Let's create a new user, live." },
+
+  { "id": "gamru-user-create", "app": "gamru", "path": "/settings/users", "act": "createUser", "action": true,
+    "title": "Creating a User (live)",
+    "narration": "I click Create New User, fill in the first and last name, email, mobile, and username, assign a role, and save. The new account is created and added to the list instantly, with its permissions defined by the role I chose." },
+
+  { "id": "gamru-user-delete", "app": "gamru", "path": null, "act": "deleteUser", "action": true,
+    "title": "Searching & Deleting a User (live)",
+    "narration": "To complete the user lifecycle, I search the list to filter down to the account we just created, then delete it and confirm. Every list in the platform supports search, filtering, and pagination, plus full create, read, update, and delete." },
+
+  { "id": "gamru-set-logs", "app": "gamru", "path": "/settings/user-logs", "act": "none",
+    "title": "Settings · User Logs",
+    "narration": "User Logs provide a full audit trail of who did what and when, for security and accountability." },
+
+  { "id": "gamru-set-roles", "app": "gamru", "path": "/settings/roles", "act": "none",
+    "title": "Settings · Roles",
+    "narration": "Roles define permissions, so each team member only sees and touches the parts of the platform they need." },
+
+  { "id": "gamru-set-system", "app": "gamru", "path": "/settings/system-settings", "act": "none",
+    "title": "Settings · System Settings",
+    "narration": "System Settings is where you toggle modules and configure platform wide behaviour, including which sections appear in the menu." },
+
+  { "id": "gamru-set-tags-gam", "app": "gamru", "path": "/settings/tags-gamification", "act": "none",
+    "title": "Settings · Tags (Gamification)",
+    "narration": "Gamification Tags label and organize missions, rewards, and rules for easy management at scale." },
+
+  { "id": "gamru-set-tags-crm", "app": "gamru", "path": "/settings/tags-crm", "act": "none",
+    "title": "Settings · Tags (CRM)",
+    "narration": "C R M Tags do the same for campaigns, segments, and player data." },
+
+  { "id": "gamru-set-media", "app": "gamru", "path": "/settings/media-database", "act": "none",
+    "title": "Settings · Media Database",
+    "narration": "The Media Database stores images and assets used across missions, rewards, and widgets, uploaded and served by the backend." },
+
+  { "id": "gamru-set-casino", "app": "gamru", "path": "/settings/casino-catalog", "act": "none",
+    "title": "Settings · Casino Catalog",
+    "narration": "The Casino Catalog manages the casino games the platform knows about, which gamification rules and missions reference by category and game." },
+
+  { "id": "gamru-set-sports", "app": "gamru", "path": "/settings/sports-catalog", "act": "none",
+    "title": "Settings · Sports Catalog",
+    "narration": "The Sports Catalog does the same for sports markets, teams, and events." },
+
+  { "id": "gamru-set-http", "app": "gamru", "path": "/settings/http-debugger-console", "act": "none",
+    "title": "Settings · HTTP Debugger Console",
+    "narration": "The H T T P Debugger Console lets engineers inspect and test the platform's integration calls directly from the admin app." },
+
+  { "id": "gamru-set-widget", "app": "gamru", "path": "/settings/widget-setup", "act": "none",
+    "title": "Settings · Widget & iFrame Setup",
+    "narration": "Widget Setup is where operators create embeddable widgets. You pick a client and a feature type, theme it with a live preview, and copy a ready made iframe or embed script snippet that drops missions, tournaments, leaderboards, or rewards into any external site." },
+
+  { "id": "widget-flow", "app": "diagram", "diagram": "widget", "act": "none",
+    "title": "Widget & iFrame System",
+    "narration": "Widgets are authored once and embedded anywhere. The embed script scans the host page and injects auto resizing iframes to the widget endpoint. Gamru validates every request by client, auth key, status, expiry, and allowed domains before returning data by email. And the mission, bundle, and tournament widgets are fully interactive — players can join, progress, and even play the real game right inside the iframe." },
+
+  { "id": "gamru-config-clients", "app": "gamru", "path": "/configurations/clients", "act": "none",
+    "title": "Configurations · Clients & Auth Keys",
+    "narration": "Configurations manages Clients — the brands or partners that use Gamru, each with its own auth key and webhook U R L. This is the integration hub. That client auth key is exactly what the games platform and every widget present to call Gamru securely. That completes the admin side." },
+
+  { "id": "dataflow", "app": "diagram", "diagram": "dataflow", "act": "none",
+    "title": "End-to-End Data Flow",
+    "narration": "Before we switch sides, here is the pattern behind every feature. A player action flows from the frontend to the backend, across the integration A P I to Gamru's business logic, into the database, and back as a synchronized snapshot that updates the player's screen. The integration is idempotent, fire and forget, and falls back safely if either side is down — so gameplay never breaks." },
+
+  { "id": "bridge", "app": "games", "path": "/login", "act": "none",
+    "title": "From Operator to Player",
+    "narration": "Everything we just configured now comes to life for players. The games platform, Gamify Engage, reads those missions, ranks, tournaments, campaigns, and bonuses in real time. Let's switch to the player experience and actually use it." },
+
+  { "id": "games-login", "app": "games", "path": null, "act": "gamesLogin",
+    "title": "Player Sign In",
+    "narration": "The player signs in to Gamify Engage and arrives at their personal dashboard." },
+
+  { "id": "games-dashboard", "app": "games", "path": "/dashboard", "act": "none",
+    "title": "Player Dashboard",
+    "narration": "The dashboard shows the player's total experience, level, rank, and coins, with a progress bar toward the next level. These gamification numbers come from Hamara Engage through the backend, with safe fallbacks. Remember them — we'll watch them change after playing." },
+
+  { "id": "games-missions", "app": "games", "path": "/missions", "act": "none",
+    "title": "Player · Missions",
+    "narration": "Here are the missions, including the ones authored back in Gamru. Players see each mission's goal and reward, can filter by category, join, and track progress. Let's join one." },
+
+  { "id": "games-mission-join", "app": "games", "path": "/missions", "act": "joinMission", "action": true,
+    "title": "Joining a Mission (live)",
+    "narration": "The player opens a mission and joins it. That join request travels to Gamru, which creates the participant record and confirms instantly. As the player plays matching games, Gamru's engine advances the mission toward completion, at which point the reward can be claimed." },
+
+  { "id": "games-mission-bundles", "app": "games", "path": "/mission-bundles", "act": "none",
+    "title": "Player · Mission Bundles",
+    "narration": "Mission Bundles appear here too, driven entirely by Gamru. Each bundle shows its periodicity and a completion bar, and when every mission in the set is done, the player claims the whole bundle reward at once." },
+
+  { "id": "games-tournaments", "app": "games", "path": "/tournaments", "act": "none",
+    "title": "Player · Tournaments",
+    "narration": "Tournaments created by operators show up live, with branding, countdowns, and a history tab. Players join and climb the leaderboard Gamru ranks for them, competing for the prize pool." },
+
+  { "id": "games-hub", "app": "games", "path": "/games", "act": "none",
+    "title": "Player · Games Hub",
+    "narration": "Now the fun part. The Games hub offers eight mini games — Slider, Lucky Spinner, Dragon Run, Memory Match, Click Storm, Snake, Teen Patti, and Aviator — each a way to earn experience and advance missions. Let's actually play one." },
+
+  { "id": "games-play-clickstorm", "app": "games", "path": "/games/click-storm", "act": "playClickStorm", "action": true,
+    "title": "Playing Click Storm — earning real XP",
+    "narration": "In Click Storm, the player taps as many targets as they can before the timer runs out. Watch the hits add up. When the round ends, the platform records the activity, forwards it to Gamru, and awards experience points — real points, credited live to this player's profile." },
+
+  { "id": "games-xp-proof", "app": "games", "path": "/dashboard", "act": "none",
+    "title": "Progress Updated",
+    "narration": "And back on the dashboard, the player's experience and progress have increased. The round we played was recorded and the points awarded automatically — this is the gamification loop working end to end, across both platforms." },
+
+  { "id": "games-deposit", "app": "games", "path": "/deposit", "act": "doDeposit", "action": true,
+    "title": "Making a Deposit (live)",
+    "narration": "Players can top up their wallet. I enter an amount and deposit, and the funds are added instantly to Real Money. Notice the wallet card splits the balance into Real Money and Bonus Money — the same two buckets that bonus claims credit." },
+
+  { "id": "games-rewardshop", "app": "games", "path": "/reward-shop", "act": "none",
+    "title": "Player · Reward Shop",
+    "narration": "In the reward shop, players spend the tokens they earn on items from the catalog, with tabs for their boosters and their shop history. Buying an item deducts tokens and records the purchase, which surfaces in the operator's purchase feed." },
+
+  { "id": "games-rewards", "app": "games", "path": "/rewards", "act": "none",
+    "title": "Player · Rewards & Bonus Claims",
+    "narration": "The Rewards page unifies two sources. Rewards from Gamru — mission and tournament prizes — sit alongside bonuses granted by reaching ranks and levels. A claimable row lights up a Claim button; bonus claims credit the Real Money or Bonus Money wallet, while Gamru rewards claim from its ledger." },
+
+  { "id": "games-inbox", "app": "games", "path": "/inbox", "act": "none",
+    "title": "Player · Inbox (Campaign Delivery)",
+    "narration": "The Inbox is where C R M campaigns land on site. Each message was delivered by Gamru's engine to this specific player. Opening one marks it read and records an open back in analytics, and its call to action records a click — closing the campaign feedback loop." },
+
+  { "id": "games-leaderboard", "app": "games", "path": "/leaderboard", "act": "none",
+    "title": "Player · Leaderboard",
+    "narration": "The Leaderboard ranks players against each other across global, weekly, and monthly boards, updating in real time to drive friendly competition." },
+
+  { "id": "games-rankprogress", "app": "games", "path": "/rank-progress", "act": "none",
+    "title": "Player · Rank Progress",
+    "narration": "Rank Progress shows how close a player is to the next rank, using the exact ladder defined in the admin console — the same ranks where bonus I Ds are pinned." },
+
+  { "id": "games-history", "app": "games", "path": "/game-history", "act": "none",
+    "title": "Player · Game History",
+    "narration": "Game History shows the Click Storm round we just played, with the experience earned — proof the platform synced our activity back as data." },
+
+  { "id": "games-widgets", "app": "games", "path": "/widgets", "act": "none",
+    "title": "Player · Embeddable Widgets",
+    "narration": "Here the integration becomes visible. These are the very widgets designed in Gamru, fetched live by the player's client and embedded as iframes. The same components can be dropped onto any external site with a single script tag." },
+
+  { "id": "games-admin-bonuses", "app": "games", "path": "/admin/bonuses", "act": "none",
+    "title": "Bonus Management (admin-only)",
+    "narration": "Because bonuses are defined on the games platform, an admin manages them here. Each bonus has an amount and a type — Real Money or Bonus Money — and exposes a copyable Bonus I D. That I D is what the operator pins onto a Gamru rank or level to wire up automatic granting." },
+
+  { "id": "games-aviator", "app": "games", "path": "/games/aviator", "act": "none",
+    "title": "Game · Aviator",
+    "narration": "And there is plenty more to play, like the fast paced Aviator multiplier game — another exciting way to earn experience and progress missions." },
+
+  { "id": "outro", "app": "diagram", "diagram": "arch", "act": "none",
+    "title": "The Complete Ecosystem",
+    "narration": "That is the complete ecosystem. Gamru is the central engagement engine and single source of truth — operators author missions, ranks, tournaments, campaigns, rewards, and bonuses, and own all progression. SDLC Games is the player facing app that forwards events and renders what Gamru returns, while Hamara Engage holds the core gamification data. Everything is connected by an event driven integration A P I, reusable across clients, embeddable as widgets, and centrally managed. Thank you for watching this complete walkthrough of the Gamru and SDLC Games platform." }
+]
